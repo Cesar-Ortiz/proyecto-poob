@@ -18,6 +18,7 @@ public class Valley{
     ArrayList<Integer> positionxi = new ArrayList<Integer>();
     ArrayList<Integer> positionxf = new ArrayList<Integer>();
     ArrayList<String> vineNames = new ArrayList<String>();
+    ArrayList<Polygon> lonas = new ArrayList<Polygon>();
     /**
      * Create a new valley with the given arguments and the default color.
      * @param height and width of the valley
@@ -44,7 +45,6 @@ public class Valley{
             System.out.println("Se salió del valle, no se puede construir el viñedo");
         }
         else if(positionxi.size() > 0){
-            System.out.println(positionxi);
             for (int i=0;i < positionxi.size();i++){
                 if (xi >= positionxi.get(i) && xi <= positionxf.get(i) && xf >= positionxi.get(i) && xf <= positionxf.get(i)){
                     System.out.println("No se puede construir el viñedo,indicaciones ya establecidas");
@@ -116,24 +116,52 @@ public class Valley{
     
     public void addTrap(int []lowerEnd,int []higherEnd){
         isVisible=true;
-        String color="black";
         int x1=lowerEnd[0];
         int x2=higherEnd[0];
         int y1=lowerEnd[1];
         int y2=higherEnd[1];
-        if (x1 > 70 && x2 > 70 && x1 < (width+70)&& x2 < (width+70) && y1 > 70 && y2 > 70 && y1 < (height+70) && y2 < (height+70)){ 
-            if (isVisible){
-                int[] xpoints={x1,x2,x2,x1};
-                int[] ypoints={y1,y2,y2+5,y1+5};
-                Canvas canvas=Canvas.getCanvas();
-                canvas.draw(this,color,new Polygon(xpoints,ypoints,4));
-                canvas.wait(10);
-            }  
+        if (x1 < 70 || x1 > (width+70) || x2 < 70 || x2 > (width+70)){
+            System.out.println("No se puede crear la lona fuera del valle");
+        }
+        else if(y1 < 70 || y1 > (height+70) || y2 < 70 || y2 > (height+70)){
+            System.out.println("No se puede crear la lona fuera del valle");       
         }
         else{
-            System.out.println("No se puede crear la lona. Fuera de rango");
+            for(int i=0;i < positionxi.size();i++){
+                if (x1 < positionxi.get(i) || x1 > positionxf.get(i) || x2 < positionxi.get(i) || x2 > positionxf.get(i)){
+                    if (isVisible){
+                        int[] xpoints={x1,x2,x2,x1};
+                        int[] ypoints={y1,y2,y2+8,y1+8};
+                        Polygon a=new Polygon (xpoints,ypoints,4);
+                        Canvas canvas=Canvas.getCanvas();
+                        canvas.draw(this,"black",a);
+                        canvas.wait(10);
+                        lonas.add(a);
+                        System.out.println(lonas.size());
+                        System.out.println(name);
+                    }
+                    else{
+                        if (isVisible){
+                            String color=returnColor(i);
+                            int[] xpoints={x1,x2,x2,x1};
+                            int[] ypoints={y1,y2,y2+8,y1+8};
+                            Polygon a=new Polygon (xpoints,ypoints,4);
+                            Canvas canvas=Canvas.getCanvas();
+                            canvas.draw(this,color,a);
+                            canvas.wait(10);
+                            lonas.add(a);
+                            System.out.println(lonas.size());
+                            System.out.println(name);
+                            break;
+                            
+                        }
+                    }
+                }
+            }
         }
     }
+    
+  
     
     /**
      * Return the color of a vineyard

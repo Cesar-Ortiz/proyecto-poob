@@ -1,11 +1,11 @@
 import java.util.ArrayList;
 import java.awt.*;
 /**
-*A valley that has vineyards and canvases that can be manipulated
-* 
-* @author (Angélica Alfaro-César Ortiz)
-* @version 1.0 (08/2019)
-*/
+ *A valley that has vineyards and canvases that can be manipulated
+ * 
+ * @author (Angélica Alfaro-César Ortiz)
+ * @version 1.0 (08/2019)
+ */
 public class Valley{
     private String name;
     private int xi;
@@ -25,9 +25,9 @@ public class Valley{
     public Valley(int height,int width){
         this.height=height;
         this.width=width;
-        Rectangle valle = new Rectangle();
+        valle = new Rectangle();
         valle.changeSize(height,width);
-        valle.makeVisible();
+        isVisible=false;
     }
     
     /**
@@ -37,7 +37,6 @@ public class Valley{
      * @param xf final position of the vineyard
     */
     public void openVineyard(String name,int xi,int xf){
-        //lviñedos.add(new Vineyard(name,xi,xf,height,width));
         this.name=name;
         this.xi=xi;
         this.xf=xf;
@@ -82,7 +81,6 @@ public class Valley{
                 } 
             }
         }
-        
         else if (positionxi.size() == 0){
             Rectangle viñedo = new Rectangle();
             viñedo.changeSize(10,xf-xi);
@@ -102,8 +100,8 @@ public class Valley{
      * @param name of the vineyard
     */
     public void closeVineyard(String name){
-       boolean verificar=false;
-       for(int i=0; i<lviñedos.size();i++){
+        boolean verificar=false;
+        for(int i=0; i<lviñedos.size();i++){
             if (returnColor(i).equals(name)){
                 lviñedos.get(i).erase();
                 lviñedos.remove(i);
@@ -113,7 +111,7 @@ public class Valley{
             if (verificar==false){
                 System.out.println("No hay un viñedo con ese nombre");
             }
-       }
+        }
     }
     
     public void addTrap(int []lowerEnd,int []higherEnd){
@@ -123,13 +121,18 @@ public class Valley{
         int x2=higherEnd[0];
         int y1=lowerEnd[1];
         int y2=higherEnd[1];
-        if (isVisible){
-            int[] xpoints={x1,x2,x2,x1};
-            int[] ypoints={y1,y2,y2+5,y1+5};
-            Canvas canvas=Canvas.getCanvas();
-            canvas.draw(this,color,new Polygon(xpoints,ypoints,4));
-            canvas.wait(10);
-        }  
+        if (x1 > 70 && x2 > 70 && x1 < (width+70)&& x2 < (width+70) && y1 > 70 && y2 > 70 && y1 < (height+70) && y2 < (height+70)){ 
+            if (isVisible){
+                int[] xpoints={x1,x2,x2,x1};
+                int[] ypoints={y1,y2,y2+5,y1+5};
+                Canvas canvas=Canvas.getCanvas();
+                canvas.draw(this,color,new Polygon(xpoints,ypoints,4));
+                canvas.wait(10);
+            }  
+        }
+        else{
+            System.out.println("No se puede crear la lona. Fuera de rango");
+        }
     }
     
     /**
@@ -140,44 +143,23 @@ public class Valley{
         Rectangle retorne=lviñedos.get(i);
         return retorne.getColor();
     }
-    /**
-     * Draw the valley with current specifications on screen.
-     */
-    private void draw() {
-        if(isVisible) {
-            Canvas canvas = Canvas.getCanvas();
-            canvas.draw(this,"green",
-                new java.awt.Rectangle(70,70, width, height));
-            canvas.wait(10);
-        }
-    }
     
     /**
      * Make this valley visible. If it was already visible, do nothing.
      */
     public void makeVisible(){
         isVisible = true;
-        draw();
+        valle.makeVisible();
         for (int i=0;i < lviñedos.size();i++){
-            lviñedos.get(i).makeVisible();;
+            lviñedos.get(i).makeVisible();
         }
     }
     
-    /**
-     * Erase the valley on screen.
-     */
-    private void erase(){
-        if(isVisible) {
-            Canvas canvas = Canvas.getCanvas();
-            canvas.erase(this);
-        }
-    }
     
     /**
      * Make this rectangle invisible. If it was already invisible, do nothing.
      */
     public void makeInvisible(){
-        erase();
         isVisible = false;
         for (int i=0;i < lviñedos.size();i++){
             lviñedos.get(i).makeInvisible();

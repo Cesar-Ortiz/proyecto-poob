@@ -41,7 +41,7 @@ public class Valley{
         this.name=name;
         this.xi=xi;
         this.xf=xf;
-        if (xf > width && xi > xf){
+        if (xf > width && xi > width || xi < width && xf > width){
             System.out.println("Se salió del valle, no se puede construir el viñedo");
         }
         else if(positionxi.size() > 0){
@@ -127,42 +127,38 @@ public class Valley{
             System.out.println("No se puede crear la lona fuera del valle");       
         }
         else{
-            for(int i=0;i < positionxi.size();i++){
-                if (x1 < positionxi.get(i) || x1 > positionxf.get(i) || x2 < positionxi.get(i) || x2 > positionxf.get(i)){
+            for(int i=0; i < positionxi.size();i++){
+                if (x1 == positionxi.get(i) && x2 == positionxf.get(i) || (x1 > positionxi.get(i) && x1 < positionxf.get(i) &&
+                x2 > positionxi.get(i) && x2 < positionxf.get(i))){
                     if (isVisible){
-                        int[] xpoints={x1,x2,x2,x1};
+                        int[] xpoints={x2+70,x1+70,x1+70,x2+70};
+                        int[] ypoints={y1,y2,y2+8,y1+8};
+                        String color=returnColor(i);
+                        Polygon a=new Polygon (xpoints,ypoints,4);
+                        Canvas canvas=Canvas.getCanvas();
+                        canvas.draw(this,color,a);
+                        canvas.wait(10);
+                        lonas.add(a);
+                        break;
+                    }
+                }
+                else{
+                    if (isVisible){
+                        String color=returnColor(i);
+                        int[] xpoints={x2+70,x1+70,x1+70,x2+70};
                         int[] ypoints={y1,y2,y2+8,y1+8};
                         Polygon a=new Polygon (xpoints,ypoints,4);
                         Canvas canvas=Canvas.getCanvas();
                         canvas.draw(this,"black",a);
                         canvas.wait(10);
                         lonas.add(a);
-                        System.out.println(lonas.size());
-                        System.out.println(name);
-                    }
-                    else{
-                        if (isVisible){
-                            String color=returnColor(i);
-                            int[] xpoints={x1,x2,x2,x1};
-                            int[] ypoints={y1,y2,y2+8,y1+8};
-                            Polygon a=new Polygon (xpoints,ypoints,4);
-                            Canvas canvas=Canvas.getCanvas();
-                            canvas.draw(this,color,a);
-                            canvas.wait(10);
-                            lonas.add(a);
-                            System.out.println(lonas.size());
-                            System.out.println(name);
-                            break;
-                            
-                        }
+                        break;     
                     }
                 }
             }
         }
     }
-    
-  
-    
+        
     /**
      * Return the color of a vineyard
      * @param i,position in the vineyard list
@@ -183,7 +179,6 @@ public class Valley{
         }
     }
     
-    
     /**
      * Make this rectangle invisible. If it was already invisible, do nothing.
      */
@@ -193,7 +188,7 @@ public class Valley{
             lviñedos.get(i).makeInvisible();
         }
     }
-}   
+}
 
 
    

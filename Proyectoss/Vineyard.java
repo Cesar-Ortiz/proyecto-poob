@@ -19,7 +19,7 @@ public class Vineyard{
         this.name=name;
         this.xi=xi;
         this.xf=xf;
-        if (xf > width && xi > xf){
+        if (xf > width && xi > width || xi < width && xf > width){
             System.out.println("Se salió del valle, no se puede construir el viñedo");
         }
         else if(positionxi.size() > 0){
